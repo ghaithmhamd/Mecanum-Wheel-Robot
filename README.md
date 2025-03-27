@@ -20,7 +20,8 @@ Mecanum Robot Wheel is an omnidirectional robotic vehicle using a **PIC16F877A**
 
 ## Media
 🎥 Watch the **real video** here:  
-[📷 Facebook Link](https://www.facebook.com/share/p/1DshhTfUau/)
+[📷 Facebook Link vid1](https://www.facebook.com/share/p/1YEtfSjeeC/)
+[📷 Facebook Link vid2 suppraa](https://www.facebook.com/share/r/19BW8npX7q/)
 
 ## Files Included
 - 📄 **Kinematic file** – Controls movement calculations
