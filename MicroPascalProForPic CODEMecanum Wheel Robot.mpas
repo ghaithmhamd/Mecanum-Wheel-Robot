@@ -1,0 +1,100 @@
+program carhba_str;
+//this file is created by Ghaith Mhamdi with a 16f877A PIC microcontroller on MikroPascalPro for pic
+const avant:string[5]='avant'; arriere:string[7]='arrière'; droite:string[16]='tourner à droite'; gauche:string[16]='tourner à gauche';
+var t:array[16]of char; k:byte; x:char; i:word;
+
+procedure translation;
+ begin
+ for i:=0 to 14 do t[i]:=t[i+1];
+ t[15]:=x
+ end;
+
+procedure vocal;
+begin
+ i:=0;
+ while ((avant[i]=t[i]) and (i<4)) do i:=i+1;
+ if (avant[i]=t[i]) then begin portd:=%01010101; delay_ms(2000); portd:=0; end else
+ i:=0;
+ while ((arriere[i]=t[i]) and (i<6)) do i:=i+1;
+ if (arriere[i]=t[i]) then begin portd:=%10101010; delay_ms(2000); portd:=0; end else
+ i:=0;
+ while ((droite[i]=t[i]) and (i<15)) do i:=i+1;
+ if (droite[i]=t[i]) then begin portd:=%01101001; delay_ms(2000); portd:=0; end else
+ i:=0;
+ while ((gauche[i]=t[i]) and (i<15)) do i:=i+1;
+ if (gauche[i]=t[i]) then begin portd:=%10010110; delay_ms(2000); portd:=0; end;
+end;
+
+procedure tone2;
+ begin
+ for i:=1000 to 2000 do sound_play(i,1);
+ for i:=1000 to 2000 do sound_play(3000-i,1);
+ for i:=1000 to 2000 do sound_play(i,1);
+ for i:=1000 to 2000 do sound_play(3000-i,1);
+ end;
+
+procedure tone1;
+  begin
+  sound_play(262,200);
+  sound_play(294,200);
+  sound_play(329,200);
+  sound_play(349,200);
+  end;
+//******************programme_principale***************
+begin
+  adcon1:=$86;
+  trisd:=0;
+  portd:=0;
+  sound_init(porta,0);
+  pwm1_init(1000);
+  k:=0;
+  uart1_init(9600);  
+  while (uart1_data_ready()=0)do ;
+  tone1;
+  uart1_write_text('bnjr ghaith');
+  
+  //*************boucle_infini*************************
+  while true do
+    begin
+    pwm1_set_duty(k);
+    pwm1_start(); 
+    if (uart1_data_ready()) then
+      begin
+      x:=uart1_read();
+      translation;
+      end;
+    vocal; 
+    case x of
+    'A':portd:=%01010101;      //F
+    'B':portd:=%10101010;      //B
+    'C':portd:=%01101001;      //R
+    'D':portd:=%10010110;      //L
+    'E':portd:=%01000001;      //FR
+    'F':portd:=%00010100;      //FL
+    'G':portd:=%00101000;      //BR
+    'H':portd:=%10000010;      //BL
+    'I':portd:=0;          //STOP
+    'J':portd:=%10011001;      //TURN RIGH centre
+    'K':portd:=%01100110;      //TURN LEFT centre
+    'L':portd:=%10001000;      //TURN FRONT RIGH COINS
+    'M':portd:=%00100010;      //TURN FRONT LEFT CoINS
+    'N':portd:=%01000100;      //TURN BACK RIGH COINS
+    'O':portd:=%00010001;      //TURN BACK LEFT CoINS
+    'P':portd:=%00001001;      //TURN RIGH centre BAS
+    'Q':portd:=%00000110;      //TURN LEFT centre BAS
+    'R':portd:=%10010000;      //TURN RIGH centre HAUT
+    'S':portd:=%01100000;      //TURN LEFT centre HAUT
+    'T':tone2;
+    '0':k:=0;
+    '1':k:=76;
+    '2':k:=98;
+    '3':k:=120;
+    '4':k:=142;
+    '5':k:=164;
+    '6':k:=186;
+    '7':k:=208;
+    '8':k:=230;
+    '9':k:=255;
+    end;
+  end;
+end.
